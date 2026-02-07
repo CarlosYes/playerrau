@@ -1,168 +1,219 @@
- <!DOCTYPE html>
-<html lang=pt-PT>
+<!DOCTYPE html>
+<html lang="pt-PT">
 <head>
-<title>Radio Amigos Unidos</title>
-<meta name="description" content="RAU" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<meta http-equiv=X-UA-Compatible content="IE=Edge"/>
-<meta property="og:title" content="RAU Player" />
-<meta property="og:description" content="RAU" />
-<link rel="icon" type="image/png" href="https://i.imgur.com/nNh98kV.png" sizes="48x48" />
-<link rel="icon" type="image/png" href="https://i.imgur.com/nNh98kV.png" sizes="96x96" />
-<link rel="icon" type="image/png" href="https://i.imgur.com/nNh98kV.png" sizes="144x144" />
-<link rel="icon" type="image/png" href="https://i.imgur.com/nNh98kV.png" sizes="192x192" />
-<link rel="apple-touch-icon" href="https://i.imgur.com/nNh98kV.png" sizes="180x180"/>
+    <title>Radio Amigos Unidos - Final 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8"/>
     <style>
-        :root { --accent: #00f2ff; --bg: #0a0a0a; }
-        body { background: transparent; margin: 0; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; overflow: hidden; }
-        .player-container { width: 680px; background: var(--bg); border-radius: 4px; padding: 20px; display: grid; grid-template-columns: 220px 1fr; gap: 20px; position: relative; border: 1px solid #222; box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
-        .top-banner { grid-column: 1 / -1; background: #000; padding: 8px; font-size: 11px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--accent); color: #666; font-weight: bold; }
-        #album-art { width: 220px; height: 220px; background: #000; border-radius: 4px; object-fit: cover; }
-        .stats-info { font-size: 11px; line-height: 1.6; color: #555; margin-top: 10px; }
-        .stats-info b { color: #aaa; }
-        .side-right { display: flex; flex-direction: column; justify-content: space-between; }
-        .track-display h2 { font-size: 18px; margin: 0; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .track-display p { font-size: 15px; margin: 5px 0 10px; color: var(--accent); font-weight: bold; }
-        .eq-box { background: #000; height: 90px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
-        #visualizer { width: 100%; height: 70px; }
-        .time-now { font-size: 36px; font-weight: bold; text-align: center; color: #fff; margin: 10px 0; }
-        .footer { grid-column: 1 / -1; display: flex; align-items: center; gap: 20px; border-top: 1px solid #222; padding-top: 15px; }
-        .play-btn { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #333; background: none; color: #fff; font-size: 24px; cursor: pointer; transition: 0.3s; }
-        .play-btn:hover { border-color: var(--accent); color: var(--accent); }
-        .vol-control { flex-grow: 1; display: flex; align-items: center; gap: 10px; font-size: 11px; color: #666; }
-        input[type=range] { flex-grow: 1; accent-color: var(--accent); cursor: pointer; }
-        .side-colors { position: absolute; right: -40px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; }
-        .dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid #333; }
+        :root { --accent: #00ff00; --bg: #0a0a0a; }
+        body { background: #050505; margin: 0; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; overflow: hidden; cursor: pointer; }
+        
+        .player-container { 
+            width: 580px; background: var(--bg); border-radius: 12px; padding: 15px 20px; 
+            display: grid; grid-template-columns: 160px 1fr; gap: 18px; position: relative; 
+            border: 1px solid var(--accent); box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 10px var(--accent); 
+        }
+
+        .top-banner { grid-column: 1 / -1; background: rgba(0,0,0,0.8); height: 45px; display: flex; align-items: center; border-bottom: 2px solid var(--accent); position: relative; overflow: hidden; }
+        .live-tag { background: var(--bg); height: 100%; display: flex; align-items: center; gap: 8px; padding: 0 15px; border-right: 2px solid #333; font-size: 11px; font-weight: 800; color: var(--accent); z-index: 10; }
+        .live-dot { width: 8px; height: 8px; background-color: var(--accent); border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+        
+        .marquee-container { position: absolute; left: 0; right: 0; width: 100%; display: flex; align-items: center; }
+        #b-track { display: inline-block; font-size: 22px; font-weight: 900; color: var(--accent); text-transform: uppercase; white-space: nowrap; animation: scrollContinuous 12s linear infinite; }
+        @keyframes scrollContinuous { 0% { transform: translateX(580px); } 100% { transform: translateX(-100%); } }
+
+        #album-art { width: 160px; height: 160px; background: #000; border-radius: 8px; object-fit: cover; border: 1px solid var(--accent); }
+        .listeners-box { margin-top: 12px; text-align: left; padding: 5px 0; }
+        #val-listeners-label { font-size: 14px; font-weight: 900; color: var(--accent); text-transform: uppercase; }
+
+        .side-right { display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+        .track-display h2 { font-size: 19px; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .track-display p { font-size: 14px; margin: 2px 0 6px; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+        
+        .eq-box { background: rgba(0,0,0,0.95); height: 70px; border-radius: 8px; display: flex; align-items: flex-end; justify-content: center; border: 1px solid var(--accent); padding: 5px; overflow: hidden; margin-bottom: 5px; }
+        #visualizer { width: 100%; height: 60px; }
+
+        .info-center-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; }
+        .time-now { font-size: 28px; font-weight: 900; color: var(--accent); font-family: 'Courier New', monospace; text-shadow: 0 0 10px var(--accent); line-height: 1; }
+        
+        .date-bitrate-group { display: flex; flex-direction: column; align-items: flex-end; }
+        .custom-date { font-size: 10px; font-weight: 900; color: var(--accent); text-transform: uppercase; }
+        .bitrate-box { font-size: 9px; font-weight: 900; color: var(--accent); text-transform: uppercase; opacity: 0.7; }
+
+        .footer { grid-column: 1 / -1; display: flex; align-items: center; gap: 15px; border-top: 1px solid #222; padding-top: 12px; }
+        .play-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); background: none; color: var(--accent); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .play-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); }
+        
+        input[type=range] { width: 100px; accent-color: var(--accent); cursor: pointer; }
+        #volPerc { color: var(--accent); font-weight: 900; font-size: 10px; }
+
+        .side-colors { position: absolute; right: -45px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; background: #000; padding: 10px; border-radius: 20px; border: 1px solid #333; }
+        .dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.1); transition: 0.2s; }
+        .dot:hover { transform: scale(1.3); }
     </style>
 </head>
-<body>
+<body onclick="forceStart()">
 
 <div class="player-container">
     <div class="top-banner">
-        <span>Rádio Dos Amigos Unidos</span>
-        <span id="b-track">CARREGANDO...</span>
+        <div class="live-tag"><div class="live-dot"></div><span>LIVE</span></div>
+        <div class="marquee-container"><span id="b-track">A CARREGAR...</span></div>
     </div>
+    
     <div class="side-left">
-        <img id="album-art" src="https://i.postimg.cc/8kJqR7g4/Logo-RAU-(Completo-350x350).png" alt="Capa">
-        <div class="stats-info">
-            OUVINTES: <b id="val-listeners"> </b><br>
-            GÊNERO: <b id="val-genre">VÁRIOS</b><br>
-            BITRATE: <b id="val-bitrate">128</b> KBPS
+        <img id="album-art" src="https://i.postimg.cc/8kJqR7g4/Logo-RAU-(Completo-350x350).png">
+        <div class="listeners-box">
+            <span id="val-listeners-label">OUVINTES:</span>
         </div>
     </div>
+
     <div class="side-right">
         <div class="track-display">
-            <h2 id="song-title">Sintonizando...</h2>
-            <p id="artist-name">Radio Dos Amigos Unidos</p>
+            <h2 id="song-title">Rádio</h2>
+            <p id="artist-name">Dos Amigos Unidos</p>
         </div>
-        <div class="eq-box"><canvas id="visualizer"></canvas></div>
-        <div class="time-now" id="clock"> </div>
+        
+        <div class="eq-box">
+            <canvas id="visualizer"></canvas>
+        </div>
+
+        <div class="info-center-row">
+            <div class="time-now" id="clock">00:00:00</div>
+            <div class="date-bitrate-group">
+                <div class="custom-date" id="full-date">---</div>
+                <div class="bitrate-box">BIRATES: <span id="val-bitrate">128</span> KBPS</div>
+            </div>
+        </div>
     </div>
+
     <div class="footer">
         <button class="play-btn" id="playBtn">▶</button>
-        <div class="vol-control">
-            VOL 🔊 <input type="range" id="volRange" min="0" max="1" step="0.01" value="0.8"> <span id="volPerc">80%</span>
+        <div style="display:flex; align-items:center; gap:10px; font-size:9px; font-weight:800">
+            <span style="color: var(--accent)">VOL</span> 
+            <input type="range" id="volRange" min="0" max="1" step="0.01" value="0.8"> 
+            <span id="volPerc">80%</span>
         </div>
     </div>
+
     <div class="side-colors">
+        <div class="dot" style="background: #00ff00;" onclick="setTheme('#00ff00')"></div>
         <div class="dot" style="background: #00f2ff;" onclick="setTheme('#00f2ff')"></div>
         <div class="dot" style="background: #ff4d4d;" onclick="setTheme('#ff4d4d')"></div>
-        <div class="dot" style="background: #a2ff00;" onclick="setTheme('#a2ff00')"></div>
         <div class="dot" style="background: #ffec00;" onclick="setTheme('#ffec00')"></div>
+        <div class="dot" style="background: #ff00ff;" onclick="setTheme('#ff00ff')"></div>
+        <div class="dot" style="background: #ff9d00;" onclick="setTheme('#ff9d00')"></div>
     </div>
 </div>
 
 <script>
-    const _sU = "https://sp0.redeaudio.com:10822/;type=mp3";
-    const _statsURL = "https://sp0.redeaudio.com:10822/7.html";
-    const _itunes = "https://itunes.apple.com/search?term=";
-
-    const audio = new Audio(_sU);
-    audio.crossOrigin = "anonymous";
     const canvas = document.getElementById('visualizer');
     const ctx = canvas.getContext('2d');
-    let audioCtx, analyser, dataArray;
+    let audioCtx, analyser, dataArray, peaks = [];
+
+    const streamUrl = "https://sp0.redeaudio.com:10822/;type=mp3";
+    const statsApi = "https://sp0.redeaudio.com:10822/stats?json=1";
+    const audio = new Audio(streamUrl);
+    audio.crossOrigin = "anonymous";
+    audio.autoplay = true;
+
+    let isPlaying = false;
 
     function setTheme(c) { document.documentElement.style.setProperty('--accent', c); }
 
-    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+    function updateClock() {
+        const agora = new Date();
+        document.getElementById('clock').innerText = agora.toLocaleTimeString('pt-PT');
+        const hora = agora.getHours();
+        let saudacao = (hora >= 13 && hora < 20) ? "BOA TARDE" : (hora >= 20 || hora < 6) ? "BOA NOITE" : "BOM DIA";
+        const opcoes = { weekday: 'long', day: '2-digit', month: '2-digit' };
+        const dataFormatada = agora.toLocaleDateString('pt-PT', opcoes).toUpperCase();
+        document.getElementById('full-date').innerHTML = `${saudacao}! ${dataFormatada}, 2026`;
+    }
 
-    async function updateMetadata() {
-        const proxy = "https://api.allorigins.win/get?url=";
+    async function updateMeta() {
         try {
-            const response = await fetch(proxy + encodeURIComponent(_statsURL));
-            const data = await response.json();
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = data.contents;
-            const raw = tempDiv.innerText.split(',');
-
-            if (raw.length >= 6) {
-                const ouvintes = raw[0];
-                const bitrate = raw[5];
-                const musica = raw[6];
-
-                document.getElementById('val-listeners').innerText = ouvintes;
-                document.getElementById('val-bitrate').innerText = bitrate;
-                document.getElementById('b-track').innerText = musica;
-
-                const partes = musica.split(' - ');
-                document.getElementById('artist-name').innerText = partes[0] || "Globalmix";
-                document.getElementById('song-title').innerText = partes[1] || partes[0];
-
-                fetchCover(musica);
-            }
+            const r = await fetch(statsApi);
+            const d = await r.json();
+            const song = d.songtitle || "RAU Radio";
+            document.getElementById('val-listeners-label').innerText = `OUVINTES: ${d.uniquelisteners}`;
+            document.getElementById('val-bitrate').innerText = d.bitrate;
+            document.getElementById('b-track').innerText = song;
+            const p = song.split(' - ');
+            document.getElementById('artist-name').innerText = p[0] || "RAU";
+            document.getElementById('song-title').innerText = p[1] || p[0];
+            if(song !== window.lS) { fetchArt(song); window.lS = song; }
         } catch (e) {}
     }
 
-    async function fetchCover(t) {
+    async function fetchArt(t) {
         try {
-            const res = await fetch(_itunes + encodeURIComponent(t) + "&limit=1");
-            const j = await res.json();
-            if(j.results && j.results[0]) {
-                document.getElementById('album-art').src = j.results[0].artworkUrl100.replace('100x100', '600x600');
-            }
-        } catch (err) {}
+            const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(t)}&limit=1`);
+            const j = await r.json();
+            document.getElementById('album-art').src = j.results[0] ? j.results[0].artworkUrl100.replace('100x100','600x600') : "https://i.postimg.cc/8kJqR7g4/Logo-RAU-(Completo-350x350).png";
+        } catch(e) {}
     }
 
-    function initVisualizer() {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioCtx.createAnalyser();
-        const source = audioCtx.createMediaElementSource(audio);
-        source.connect(analyser);
-        analyser.connect(audioCtx.destination);
-        analyser.fftSize = 128;
-        dataArray = new Uint8Array(analyser.frequencyBinCount);
-        render();
+    function initEQ() {
+        if(!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            const src = audioCtx.createMediaElementSource(audio);
+            src.connect(analyser); analyser.connect(audioCtx.destination);
+            analyser.fftSize = 64; 
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            render();
+        }
     }
 
     function render() {
         requestAnimationFrame(render);
         analyser.getByteFrequencyData(dataArray);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const col = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
         let x = 0;
-        const midY = canvas.height / 2;
+        const barWidth = 6;
+        const spacing = 5;
         for (let i = 0; i < dataArray.length; i++) {
-            const h = (dataArray[i] / 255) * midY;
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent');
-            ctx.fillRect(x, midY - h, 3, h * 2);
-            x += 7;
+            let h = (dataArray[i] / 255) * canvas.height;
+            ctx.fillStyle = col;
+            ctx.fillRect(x, canvas.height - h, barWidth, h);
+            if (!peaks[i] || h > peaks[i]) peaks[i] = h; else peaks[i] -= 1.2;
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(x, canvas.height - peaks[i] - 2, barWidth, 2);
+            x += barWidth + spacing;
         }
     }
 
-    document.getElementById('playBtn').onclick = () => {
-        if(!audioCtx) initVisualizer();
-        if(audio.paused) { audio.play(); playBtn.innerText = 'II'; }
-        else { audio.pause(); playBtn.innerText = '▶'; }
+    function forceStart() {
+        if (!isPlaying) {
+            initEQ();
+            audio.play().then(() => {
+                document.getElementById('playBtn').innerText = 'II';
+                isPlaying = true;
+            }).catch(() => {});
+        }
+    }
+
+    document.getElementById('playBtn').onclick = (e) => {
+        e.stopPropagation();
+        initEQ();
+        if(audio.paused) { audio.play(); playBtn.innerText = 'II'; isPlaying = true; }
+        else { audio.pause(); playBtn.innerText = '▶'; isPlaying = false; }
     };
 
-    document.getElementById('volRange').oninput = (e) => {
+    window.onload = () => {
+        updateClock();
+        setInterval(updateClock, 1000);
+        setInterval(updateMeta, 2000);
+        updateMeta();
+        audio.play().then(() => { initEQ(); document.getElementById('playBtn').innerText = 'II'; isPlaying = true; }).catch(() => {});
+    };
+
+    document.getElementById('volRange').oninput = e => {
         audio.volume = e.target.value;
         document.getElementById('volPerc').innerText = Math.round(e.target.value * 100) + "%";
     };
-
-    setInterval(updateMetadata, 15000);
-    updateMetadata();
 </script>
 </body>
 </html>
